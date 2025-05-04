@@ -24,9 +24,11 @@ const MapComponent = () => {
   console.log("device", device);
   // DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
-    latitude: 39.6813485, // Lisboa
-    longitude: -8.5204315, // Lisboa
+    latitude: 40.6319694, //39.6813485, 
+    longitude: -8.6555032, //-8.5204315, 
   });
+
+
   if (
     !ble ||
     typeof ble.latitude === "undefined" ||
@@ -60,7 +62,12 @@ const MapComponent = () => {
         </Popup>
       </Marker>
       {/* Marcador da posição do dispositivo*/}
-      <Marker position={[deviceImprov.latitude, deviceImprov.longitude]}>
+      <Marker
+        position={[
+          deviceImprov.latitude,
+          deviceImprov.longitude,
+        ]}
+      >
         <Popup>
           Marcador fixo em Lisboa: <br />
           Latitude: {deviceImprov.latitude.toFixed(4)} <br />
