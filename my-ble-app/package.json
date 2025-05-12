@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/geolocation": "^7.1.2",
     "@react-native-community/geolocation": "^3.4.0",
+    "geolib": "^3.3.4",
     "leaflet": "^1.9.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

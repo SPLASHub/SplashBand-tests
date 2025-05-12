@@ -1,6 +1,8 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 
-export const PositionContext = React.createContext({
+// TODO fazer o ble_status para o mapa saber o que se passa com o ble
+export const PositionContext = createContext({
   ble: null,
+  ble_status: null,
   device: null,
 });

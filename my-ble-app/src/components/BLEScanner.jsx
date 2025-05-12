@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import {STANDARD_SERVICES,STANDARD_SERVICES_NAMES, STANDARD_CHARACTERISTICS,STANDARD_CHARACTERISTICS_NAMES } from "./ids.jsx";
+import { convertSpeed } from "geolib";
 
 const optionalServices = [
   ...Object.keys(STANDARD_SERVICES)
@@ -29,35 +30,28 @@ export const BLEScanner = ({ onGpsData }) => {
       console.error("Tamanho do buffer inválido");
       return null;
     }
-
     // Lê os flags (byte 0)
     const flags = dataView.getUint8(0);
-
     // Decodifica os flags
     const hasLocation = (flags & 0x04) !== 0; // LN_FLAG_LOCATION_PRESENT (bit 2)
     const hasElevation = (flags & 0x08) !== 0; // LN_FLAG_ELEVATION_PRESENT (bit 3)
     const hasTime = (flags & 0x40) !== 0; // LN_FLAG_TIME_PRESENT (bit 6)
     const hasSpeed = (flags & 0x01) !== 0; // LN_FLAG_SPEED_PRESENT (bit 0)
-
     // Objeto para armazenar os dados decodificados
     const result = {};
-
     // Latitude e Longitude (int32, little-endian)
     if (hasLocation) {
       result.latitude = dataView.getInt32(1, true) / 1e7; // Converte para graus decimais
       result.longitude = dataView.getInt32(5, true) / 1e7;
     }
-
     // Altitude (int16, little-endian)
     if (hasElevation) {
       result.altitude = dataView.getInt16(9, true) / 10; // Converte para metros
     }
-
     // Velocidade (uint16, little-endian)
     if (hasSpeed) {
       result.speed = dataView.getUint16(11, true) / 10; // Converte para m/s
     }
-
     // Data e Hora
     if (hasTime) {
       const year = dataView.getUint16(13, true);
@@ -107,18 +101,6 @@ export const BLEScanner = ({ onGpsData }) => {
       setServer(server);
       setStatus("Conectado");
       console.log("device.gatt.connect():", device);
-
-      //TESTES
-      /* const gapSrv  = await server.getPrimaryService('generic_access');
-      const nameChar = await gapSrv.getCharacteristic('gap.device_name'); // 0x2A00
-      const value    = await nameChar.readValue();
-      console.log('Nome do dispositivo:', new TextDecoder().decode(value)); */
-
-      /*const LNservice = await server.getPrimaryService('location_and_navigation');
-      console.log("LNservice", LNservice);
-      const LNserviceByID = await server.getPrimaryService('00001819-0000-1000-8000-00805f9b34fb');
-      console.log("LNserviceByID", LNserviceByID); */
-      //
       console.log("discoverServices(server)", server);
       await discoverServices(server);
     } catch (error) {
@@ -142,6 +124,8 @@ export const BLEScanner = ({ onGpsData }) => {
         charMap[service.uuid] = characteristics;
       }
       console.log("Características disponíveis:", charMap);
+      console.log("-----\n-----");
+      console.log(charMap[STANDARD_SERVICES_NAMES.LN]);
       setCharacteristics(charMap);
 
       if (charMap[STANDARD_SERVICES_NAMES.LN]) {

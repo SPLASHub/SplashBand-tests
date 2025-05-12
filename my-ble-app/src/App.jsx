@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import  BLEScanner  from "./components/BLEScanner";
+import BLEPulseira from "./components/BLEPulseira";
 import MapComponent from "./components/MapComponent"
 import GetDeviceGPS from "./components/GetDeviceGPS_hmtl5";
 //import GetDeviceGPS from "./components/GetDeviceGPS_reactGeolocation";
@@ -15,10 +16,10 @@ function App() {
       <PositionContext.Provider
         value={{ ble: bleGPSData, device: deviceGPSData }}
       >
-        {/* BLEScanner actualiza o estado através de uma prop */}
-        <BLEScanner onGpsData={setBleGpsData} />
+        {/* <BLEScanner onGpsData={setBleGpsData} /> */}
+        <BLEPulseira onGpsData={setBleGpsData} />
         <GetDeviceGPS onGpsData={setDeviceGPSData} />
-        <MapComponent /> {/* Consumidor vê o mesmo contexto */}
+        <MapComponent />
       </PositionContext.Provider>
     </div>
   );
