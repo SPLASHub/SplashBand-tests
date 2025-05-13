@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { PositionContext } from "./Contexts";
 //import {STANDARD_SERVICES,STANDARD_SERVICES_NAMES, STANDARD_CHARACTERISTICS,STANDARD_CHARACTERISTICS_NAMES } from "./ids.jsx";
 const STANDARD_SERVICES = {
   "00001800-0000-1000-8000-00805f9b34fb": "Generic Access Profile",
@@ -24,14 +25,9 @@ const discoverableServices = [...Object.keys(STANDARD_SERVICES)];
 
 const deviceName = "Pulseira";
 
-export const BLEScanner = ({ onGpsData }) => {
-  const [gpsData, setGpsData] = useState({
-    latitude: 0,
-    longitude: 0,
-    altitude: 0,
-    speed: 0,
-    timestamp: "",
-  });
+export const BLEPulseira = () => {
+  const { setGPSData, setBleConnectionStatus, setGPSDataStatus } =
+    useContext(PositionContext);
   const [device, setDevice] = useState(null);
   const [server, setServer] = useState(null);
   const [services, setServices] = useState([]);
@@ -92,6 +88,7 @@ export const BLEScanner = ({ onGpsData }) => {
   };
   const requestDevice = async () => {
     try {
+      setBleConnectionStatus("disconnected");
       setStatus("Procurando dispositivos...");
       navigator.bluetooth
         .requestDevice({
@@ -119,6 +116,7 @@ export const BLEScanner = ({ onGpsData }) => {
       return;
     }
     try {
+      setBleConnectionStatus("attempting reconnection");
       setStatus("Tentando reconectar...");
       const reconnectedServer = await bluetoothDevice.gatt.connect();
       setServer(reconnectedServer);
@@ -134,6 +132,7 @@ export const BLEScanner = ({ onGpsData }) => {
   const setupServices = async (bleDevice) => {
     const bleServer = await bleDevice.gatt.connect();
     setServer(bleServer);
+    setBleConnectionStatus("connected");
     setStatus("Conectado");
     console.log("Server: ", bleServer);
     const bleServices = await bleServer.getPrimaryServices();
@@ -160,6 +159,7 @@ export const BLEScanner = ({ onGpsData }) => {
     clearInterval(pollingRef.current);
     pollingRef.current = null;
     device.gatt.disconnect();
+    setBleConnectionStatus("disconnected");
     setStatus("Desconectado");
     setDevice(null);
     setServer(null);
@@ -173,14 +173,13 @@ export const BLEScanner = ({ onGpsData }) => {
     console.log("▶️ Starting polling…");
     pollingRef.current = window.setInterval(async () => {
       try {
-        console.log("Polling location speed…");
+        //console.log("Polling location speed…");
         const dv = await locationChar.readValue();
-        console.log("raw DataView:", dv);
+        //console.log("raw DataView:", dv);
         const data = parseLocationSpeedData(dv);
-        console.log("parsed GPS data:", data);
+        //console.log("parsed GPS data:", data);
         if (data) {
-          setGpsData(data);
-          onGpsData?.(data);
+          setGPSData?.(data);
         }
       } catch (err) {
         console.warn("Polling error, stopping:", err);
@@ -194,7 +193,7 @@ export const BLEScanner = ({ onGpsData }) => {
         clearInterval(pollingRef.current);
       }
     };
-  }, [device, locationChar, onGpsData]);
+  }, [device, locationChar, setGPSData]);
 
   useEffect(() => {
     if (!device) return;
@@ -207,6 +206,7 @@ export const BLEScanner = ({ onGpsData }) => {
       console.warn("Pulseira BLE desconectou-se!");
       clearInterval(pollingRef.current);
       pollingRef.current = null;
+      setBleConnectionStatus("disconnected");
       setStatus("Desconectado");
       attemptReconnect(device);
     };
@@ -236,4 +236,4 @@ export const BLEScanner = ({ onGpsData }) => {
   );
 };
 
-export default BLEScanner;
+export default BLEPulseira;

@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { PositionContext } from "./Contexts";
 
-const GetDeviceGPS = ({ onGpsData }) => {
+
+const GetDeviceGPS = () => {
+  const { setDeviceGPSData } = useContext(PositionContext);
   const [posData, setPosData] = useState({
     latitude: null,
     longitude: null,
@@ -27,7 +30,7 @@ const GetDeviceGPS = ({ onGpsData }) => {
           if (accuracy <= 30) {
             const data = { latitude, longitude, speed, accuracy };
             setPosData({ ...data, error: null });
-            onGpsData && onGpsData(data);
+            setDeviceGPSData && setDeviceGPSData(data);
           } else {
             // opcionalmente atualizar apenas accuracy
             setPosData((prev) => ({

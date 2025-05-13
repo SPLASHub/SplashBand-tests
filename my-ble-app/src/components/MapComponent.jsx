@@ -23,9 +23,10 @@ const RecenterAutomatically = ({ lat, lng }) => {
 };
 
 const MapComponent = () => {
-  const { ble, device } = useContext(PositionContext);
-  console.log("ble", ble);
-  console.log("device", device);
+  const { bleGPSData, bleConnectionStatus, deviceGPSData } =
+    useContext(PositionContext);
+  console.log("bleGPSData", bleGPSData);
+  console.log("deviceGPSData", deviceGPSData);
   // DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
     latitude: 39.6813485, //40.6319694,
@@ -34,15 +35,15 @@ const MapComponent = () => {
 
 
   if (
-    !ble ||
-    typeof ble.latitude === "undefined" ||
-    !device ||
-    typeof device.latitude === "undefined"
+    !bleGPSData ||
+    typeof bleGPSData.latitude === "undefined" ||
+    !deviceGPSData ||
+    typeof deviceGPSData.latitude === "undefined"
   ) {
     return <div>Carregando mapa...</div>;
   }
   const distance = getDistance(
-    { latitude: ble.latitude, longitude: ble.longitude },
+    { latitude: bleGPSData.latitude, longitude: bleGPSData.longitude },
     { latitude: deviceImprov.latitude, longitude: deviceImprov.longitude }
   );
   console.log("distancia", distance);
@@ -52,7 +53,7 @@ const MapComponent = () => {
       <p>Distância entre a pulseira e o dispositivo: {distance} metros</p>
       <MapContainer
         //center={position}
-        center={[ble.latitude, ble.longitude]}
+        center={[bleGPSData.latitude, bleGPSData.longitude]}
         zoom={16}
         style={{ height: "400px", width: "100%" }}
       >
@@ -65,12 +66,12 @@ const MapComponent = () => {
           lng={deviceImprov.longitude}
         />
         {/* Marcador da posição da pulseira*/}
-        <Marker position={[ble.latitude, ble.longitude]}>
+        <Marker position={[bleGPSData.latitude, bleGPSData.longitude]}>
           <Popup>
             Localização atual: <br />
-            Latitude: {ble.latitude.toFixed(6)} <br />
-            Longitude: {ble.longitude.toFixed(6)} <br />
-            Velocidade: {ble.speed} m/s
+            Latitude: {bleGPSData.latitude.toFixed(6)} <br />
+            Longitude: {bleGPSData.longitude.toFixed(6)} <br />
+            Velocidade: {bleGPSData.speed} m/s
           </Popup>
         </Marker>
         {/* Marcador da posição do dispositivo*/}

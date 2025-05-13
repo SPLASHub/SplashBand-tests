@@ -5,22 +5,18 @@ import BLEPulseira from "./components/BLEPulseira";
 import MapComponent from "./components/MapComponent"
 import GetDeviceGPS from "./components/GetDeviceGPS_hmtl5";
 //import GetDeviceGPS from "./components/GetDeviceGPS_reactGeolocation";
-import { PositionContext } from "./components/Contexts";
+import { PositionProvider } from "./components/Contexts";
 
 function App() {
-  const [bleGPSData, setBleGpsData] = useState(null);
-  const [deviceGPSData, setDeviceGPSData] = useState(null);
   return (
     <div>
       <h1>Aplicação BLE com React</h1>
-      <PositionContext.Provider
-        value={{ ble: bleGPSData, device: deviceGPSData }}
-      >
+      <PositionProvider>
         {/* <BLEScanner onGpsData={setBleGpsData} /> */}
-        <BLEPulseira onGpsData={setBleGpsData} />
-        <GetDeviceGPS onGpsData={setDeviceGPSData} />
+        <BLEPulseira/>
+        <GetDeviceGPS/>
         <MapComponent />
-      </PositionContext.Provider>
+      </PositionProvider>
     </div>
   );
 }
