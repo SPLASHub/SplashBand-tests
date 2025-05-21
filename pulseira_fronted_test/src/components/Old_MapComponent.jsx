@@ -29,10 +29,9 @@ const MapComponent = () => {
   console.log("deviceGPSData", deviceGPSData);
   // DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
-    latitude: 39.6813485, //40.6319694,
-    longitude: -8.5204315, //-8.6555032
+    latitude: 40.6319694,
+    longitude: -8.6555032,
   });
-
 
   if (
     !bleGPSData ||

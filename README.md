@@ -6,7 +6,7 @@ npm init -y # NPM will create a package.json that will contain the minimal infor
 npm install vite # add a dependency to a Node.js project, in the terminal
 
 
-npm create vite@latest my-ble-app -- --template react
+npm create vite@latest pulseira_fronted_test -- --template react
 ```
 
 # Run Vite project
