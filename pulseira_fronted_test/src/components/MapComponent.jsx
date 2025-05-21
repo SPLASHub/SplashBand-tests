@@ -17,7 +17,6 @@ import { BraceletContext } from "./BLELocationTracker";
 //TODO alertar quando a distancia for maior que o raio de seguranca
 //TODO FUTURO arranjar attempt reconnect quando se pede manualmente para desconectar
 
-
 //+: BLELocationTracker : raio de seguranca em metros
 const security_radius = 30;
 
@@ -56,31 +55,55 @@ const MapComponent = () => {
   //+: Para guardar ultimos dados validos
   const [lastGPSValidData, setGPSLastValidData] = useState(null);
 
-
   const { deviceGPSData } = useContext(PositionContext);
   console.log("bleGPSData", bleGPSData, "\nbleGPSDataStatus", bleGPSDataStatus);
   console.log("deviceGPSData", deviceGPSData);
   //!: DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
-    latitude: 40.6319694,
-    longitude: -8.6555032
+    latitude: /* 40.6319694 */ 40.633481,
+    longitude: /* -8.6555032 */ -8.659561,
   });
 
-  //+: BLELocationTracker : Usar estas condicoes para determinar comportamentos
+  //+: BLELocationTracker : Usar estes estados para determinar comportamentos
   const isDesconnected = bleConnectionStatus === "disconnected";
-  const isConnected = bleConnectionStatus === "connected"; 
+  const isConnected = bleConnectionStatus === "connected";
   const isConnectedInitial =
     bleConnectionStatus === "connected" && bleGPSDataStatus === "initial"; //?: ainda nunca recebeu dados - avisa para esperar conexão e aguardar ao lado do nadador salvador
   const isConnectedwithValidData =
     bleConnectionStatus === "connected" && bleGPSDataStatus === "valid"; //?: esta a receber dados validos - mostra a localizacao
   const isConnectedwithInvalidData =
     bleConnectionStatus === "connected" && bleGPSDataStatus === "invalid"; //?: esta a receber dados invalidos - avisa que nao esta a receber dados validos e mostra a ultima localizacao valida e a sua data
+  const isAttemptingToConnectInitial =
+    bleConnectionStatus === "attempting reconnection" &&
+    bleGPSDataStatus === "initial";
   const isAttemptingToConnect =
-    bleConnectionStatus === "attempting reconnection"; //?: avisa que a pulseira esta desconectada e a tentar reconectar, alerta para se aproximar da pulseira, mostra a ultima localizacao valida e a sua data
+    bleConnectionStatus === "attempting reconnection" &&
+    bleGPSDataStatus === "invalid"; //?: avisa que a pulseira esta desconectada e a tentar reconectar, alerta para se aproximar da pulseira, mostra a ultima localizacao valida e a sua data
+  //+: BLELocationTracker : Estados para debug - estes estados nao deviam ser possiveis
+  //+: estados possiveis serao: Ci, Cv, Cx, Di (isDesconnected), Ai, Ax ; estados impossiveis:
+  const Av =
+    bleConnectionStatus === "attempting reconnection" &&
+    bleGPSDataStatus === "valid"; //?: Connection-attempting reconnection && Data-valid
+  const Dx =
+    bleConnectionStatus === "disconnected" && bleGPSDataStatus === "invalid"; //?: Connection-disconnected && Data-initial
+  const Dv =
+    bleConnectionStatus === "disconnected" && bleGPSDataStatus === "valid"; //?: Connection-disconnected && Data-valid
+  if (Av || Dx || Dv) {
+    console.warn(
+      "Encontrado estado inválido: \nConenctionStatus",
+      bleConnectionStatus,
+      "\nDataStatus",
+      bleGPSDataStatus
+    );
+  }
 
   //+: BLELocationTracker : distancia entre a pulseira e o dispositivo
   let distance = null;
-  if (!isDesconnected && !isConnectedInitial && deviceGPSData?.latitude != null) {
+  if (
+    !isDesconnected &&
+    !isConnectedInitial &&
+    deviceGPSData?.latitude != null
+  ) {
     distance = getDistance(
       {
         latitude: lastGPSValidData.latitude,
@@ -124,7 +147,12 @@ const MapComponent = () => {
         {/** Apenas para mostrar se os dados sao validos */}
       </div>
       <h2>Mapa</h2>
-      <p>Distância entre a pulseira e o dispositivo: {distance} metros</p>
+      {distance === null && (
+        <p>Distância entre a pulseira e o dispositivo ainda não possivel de calcular</p>
+      )}
+      {distance !== null && (
+        <p>Distância entre a pulseira e o dispositivo: {distance} m</p>
+      )}
       <MapContainer
         //center={position}
         center={[deviceImprov.latitude, deviceImprov.longitude]}

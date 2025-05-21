@@ -20,7 +20,9 @@ const STANDARD_CHARACTERISTICS_NAMES = {
 //TODO arranjar attempt reconnect quando se pede manualmente para desconectar
 //TODO arranjar a reconexão
 //TODO Validar os dados: - se as flags não estão presentes, então os dados não são válidos
-//FIXME na pulseira ou aqui, a data e hora tem que ser atualizadas 
+//FIXME na pulseira ou aqui, a data e hora tem que ser atualizadas - hora tem que ter em conta a hora de verao
+//FIXME se conectar, desconectar e conectar de novo dá "Uncaught (in promise) NetworkError: Connection Error: Connection attempt failed."
+//FIXME ver o caso de conectar, simular desconexão e (conectar de novo ou desconectar)
 
 const discoverableServices = [...Object.keys(STANDARD_SERVICES)];
 
@@ -252,11 +254,11 @@ export function BlelnProvider({ children }) {
   return (
     <>
       {/*//+: ---------------------------> NAO INCLUIR NA PRODUCAO ESTE BOTAO - APENAS PARA SIMULAR DESCONECAO INVOLUNTARIA <--------------------------- */}
-      {device && (
+      {/*{device && (
         <button onClick={() => device?.gatt.disconnect()}>
           Simular desconexão
         </button>
-      )}
+      )}*/}
       <BraceletContext.Provider
         value={{
           bleGPSData,

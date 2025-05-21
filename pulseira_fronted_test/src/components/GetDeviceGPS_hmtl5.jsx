@@ -72,7 +72,7 @@ const GetDeviceGPS = () => {
     return (
       <p>
         Lat: {latitude.toFixed(6)}, Lng: {longitude.toFixed(6)} <br />
-        Velocidade: {speed != null ? speed.toFixed(1) : "—"} m/s <br />
+        {/* Velocidade: {speed != null ? speed.toFixed(1) : "—"} m/s <br /> */}
         Precisão: {accuracy != null ? accuracy.toFixed(1) : "—"} m
       </p>
     );
