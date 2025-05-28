@@ -12,7 +12,8 @@ import { BlelnProvider } from "./components/BLELocationTracker";
 function App() {
   return (
     <div>
-      <h1>Aplicação BLE com React</h1>
+      <h1>Prova de conceito - conexão pulseira com mapa
+      </h1>
       <PositionProvider>
         <BlelnProvider>
           {/* <BLEScanner onGpsData={setBleGpsData} /> */}

@@ -60,8 +60,8 @@ const MapComponent = () => {
   console.log("deviceGPSData", deviceGPSData);
   //!: DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
-    latitude: /* 40.6319694 */ 40.633481,
-    longitude: /* -8.6555032 */ -8.659561,
+    latitude: /* 40.6319694 */ 40.633271,
+    longitude: /* -8.6555032 */ -8.659452,
   });
 
   //+: BLELocationTracker : Usar estes estados para determinar comportamentos
@@ -102,7 +102,8 @@ const MapComponent = () => {
   if (
     !isDesconnected &&
     !isConnectedInitial &&
-    deviceGPSData?.latitude != null
+    deviceGPSData?.latitude != null &&
+    lastGPSValidData?.latitude != null
   ) {
     distance = getDistance(
       {
@@ -148,7 +149,10 @@ const MapComponent = () => {
       </div>
       <h2>Mapa</h2>
       {distance === null && (
-        <p>Distância entre a pulseira e o dispositivo ainda não possivel de calcular</p>
+        <p>
+          Distância entre a pulseira e o dispositivo ainda não possivel de
+          calcular
+        </p>
       )}
       {distance !== null && (
         <p>Distância entre a pulseira e o dispositivo: {distance} m</p>

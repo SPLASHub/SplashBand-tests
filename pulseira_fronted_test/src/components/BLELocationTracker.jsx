@@ -43,9 +43,9 @@ export function BlelnProvider({ children }) {
   const [bleGPSDataStatus, setBleGPSDataStatus] = useState("initial");
   // estados para o ble
   const [device, setDevice] = useState(null);
-  const [server, setServer] = useState(null);
-  const [services, setServices] = useState([]);
-  const [status, setStatus] = useState("Desconectado");
+  const [server, setServer] = useState(null); //nao usado mas pode ser util futuramente
+  const [services, setServices] = useState([]); //nao usado mas pode ser util futuramente
+  const [status, setStatus] = useState("Desconectado"); //nao usado mas pode ser util futuramente
   const [locationChar, setLocationChar] = useState(null);
   const pollingRef = useRef(null);
   const manualDisconnectRef = useRef(false);
@@ -203,18 +203,15 @@ export function BlelnProvider({ children }) {
         //console.log("raw DataView:", dv);
         const data = parseLocationSpeedData(dv);
         //console.log("parsed GPS data:", data);
-        if (data){
-            setBleGPSData(data);
+        if (data) {
+          setBleGPSData(data);
         }
-        if (
-          data.latitude !== 0 &&
-          data.longitude !== 0
-        ) {
+        if (data.latitude !== 0 && data.longitude !== 0) {
           setBleGPSDataStatus("valid");
         } else {
-            if (bleGPSDataStatus !== "initial") {
-                setBleGPSDataStatus("invalid"); //?: ou seja, so sai de initial se tiver recebido anteriormente dados validos e passou a receber dados invalidos
-            }
+          if (bleGPSDataStatus !== "initial") {
+            setBleGPSDataStatus("invalid"); //?: ou seja, so sai de initial se tiver recebido anteriormente dados validos e passou a receber dados invalidos
+          }
         }
       } catch (err) {
         console.warn("Polling error, stopping:", err);

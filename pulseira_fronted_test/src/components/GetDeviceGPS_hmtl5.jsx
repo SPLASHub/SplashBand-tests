@@ -81,7 +81,7 @@ const GetDeviceGPS = () => {
   return (
     <div style={{ padding: "1rem", border: "1px solid #ddd", borderRadius: 8 }}>
       <h3>
-        Obtenção da Geolocalização de forma contíua apartir de HTML5 Geolocation
+        {/* Obtenção da  */}Geolocalização do dispositivo{/* de forma contíua apartir de HTML5 Geolocation */}
         API
       </h3>
 
