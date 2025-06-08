@@ -60,8 +60,8 @@ const MapComponent = () => {
   console.log("deviceGPSData", deviceGPSData);
   //!: DEVICE GPS NAO FUNFA BEM, POR ENQUANTO FICA ASSIM PARA NAO PERDER TEMPO VISTO QUE ISTO DEVE ESTAR ARRANJADO
   const [deviceImprov, setDeviceImprov] = useState({
-    latitude: /* 40.6319694 */ 40.633271,
-    longitude: /* -8.6555032 */ -8.659452,
+    latitude: 40.633271,
+    longitude: -8.659452,
   });
 
   //+: BLELocationTracker : Usar estes estados para determinar comportamentos
