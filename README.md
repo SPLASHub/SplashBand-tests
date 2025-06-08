@@ -1,4 +1,7 @@
 
+# Description
+- /pulseira_fronted_test : react web app to test the SplashBand functionalities
+- /scripts : utils to collect data from the SplashBand for debugging purposes
 # Setup Vite project
 
 ```bash
